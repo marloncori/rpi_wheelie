@@ -1,5 +1,3 @@
 <launch>
-   <node>
-
-   </node>
+   <node pkg="rpi_wheelie" type="robot_wheelie" name="wheelie_min_subscriber.py" output="screen" respawn="true"/>
 </launch>
