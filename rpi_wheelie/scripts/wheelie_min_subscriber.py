@@ -25,7 +25,7 @@ def listener_callback(self, msg):
         print("Unkown command. The robot car has stopped")
         robot_car.stop()
         
-def minimal_subscriber:
+def minimal_subscriber():
     rospy.init_node('robot_whelie', anonymous=True)
     rospy.Subscriber('move', String, listener_callback, queue_size=10)
     rospy.spin()
