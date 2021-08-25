@@ -27,7 +27,7 @@ def listener_callback(self, msg):
         
 def minimal_subscriber:
     rospy.init_node('robot_whelie', anonymous=True)
-    rospy.Subscribe('move', String, listener_callback, queue_size=10)
+    rospy.Subscriber('move', String, listener_callback, queue_size=10)
     rospy.spin()
 
 def shutdown():
