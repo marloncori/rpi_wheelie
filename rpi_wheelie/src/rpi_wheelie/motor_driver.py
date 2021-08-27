@@ -22,12 +22,10 @@ class MotorDriver(Arduino):
         self.pinE = self.uno.get_pin(self._enable)
  
     def _speed_map(self, val, i_min, i_max, o_min, o_max):
-        self._pwm = round(o_min + (o_max - o_min) * ((val - i_min) / (i_max - i_min)))
-        return self._pwm
+        return round(o_min + (o_max - o_min) * ((val - i_min) / (i_max - i_min)))
     
     def _speed_map_abs(self, val, i_min, i_max, o_min, o_max):
-        self._pwm = abs(round(o_min + (o_max - o_min) * ((val - i_min) / (i_max - i_min))))
-        return self._pwm
+        return abs(round(o_min + (o_max - o_min) * ((val - i_min) / (i_max - i_min))))
     
     def forward(self, speed):
         self._move(speed)
@@ -44,22 +42,22 @@ class MotorDriver(Arduino):
         
     def _move(self, speed):
         #limits
-        if speed > self._maxSpeed:
-            speed = self._maxSpeed
-        if speed < -self._maxSpeed:
-            speed = -self._maxSpeed
+        if speed > 1.0:
+            speed = 1.0
+        if speed < -1.0:
+            speed = -1.0
 
-        if speed < 0:
-            self._speed_map_abs(speed, -self._maxSpeed, self._minSpeed, 0, 256)
+        if speed < 0.0:
+            self._pwm = self._speed_map_abs(speed, -1.0, 0.0, self._minSpeed, self._maxSpeed)
             for spin in range(self._minSpeed, self._pwm, self._frequency):
                 self.pinF.write(0)
-                self.pinB.write(self._pwm)
+                self.pinB.write(spin)
                 self.pinE.write(1)
-                sleep(0.03)
+                sleep(0.04)
         else:
-            self._speed_map(speed, self._minSpeed, self._maxSpeed, 0, 256)
+            self._pwm = self._speed_map(speed, 0.0, 1.0, self._minSpeed, self._maxSpeed)
             for spin in range(self._minSpeed, self._pwm, self._frequency):
-                self.pinF.write(self._pwm)
+                self.pinF.write(spin)
                 self.pinB.write(0)
                 self.pinE.write(1)
-                sleep(0.03)
+                sleep(0.04)
